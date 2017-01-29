@@ -118,7 +118,9 @@ class BilleteraElectronica(object):
         if not isinstance(fecha, datetime):
             raise Exception("Fecha tiene que ser un datetime ")
         
-        if self._pin != pin:
+        if pin == None:
+            raise Exception("Debe introducir un pin de usuario")
+        elif self._pin != pin:
             raise Exception("Error, el pin introducido no corresponde con la billetera del usuario registrado") 
         elif self.saldo() < monto:
             raise Exception("Error, no se cuenta con balance suficiente para cubrir el coste de la operacion")
