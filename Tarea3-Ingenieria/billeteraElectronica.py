@@ -17,7 +17,7 @@ class BilleteraElectronica(object):
     @ivar _ci: Cedula de la Persona
     @ivar _pin: PIN secreto de la Persona
     @ivar _registroCreditos: Registro de Creditos de la Persona, contiene tripletas (monto, fecha, idLocal)
-    @ivar _registoDebitos: Registro de Debitos de la Persona, contiene tripletas (monto, fecha, idLocal
+    @ivar _registroDebitos: Registro de Debitos de la Persona, contiene tripletas (monto, fecha, idLocal
     '''
     _identificador = None
     _nombres = ""
@@ -25,7 +25,7 @@ class BilleteraElectronica(object):
     _ci = -1
     _pin = None
     _registroCreditos = []
-    _registoDebitos = []
+    _registroDebitos = []
 
 
     def __init__(self, identificador, nombres: str, apellidos: str, ci: int, pin: int):
@@ -54,6 +54,8 @@ class BilleteraElectronica(object):
         self._apellidos = apellidos
         self._ci = ci
         self._pin = pin
+        self._registroCreditos = []
+        self._registroDebitos = []
     
     def getIdentificador(self):
         '''@return: Identificador de la Persona'''
@@ -72,12 +74,32 @@ class BilleteraElectronica(object):
         return self._ci
     
     def saldo(self):
-        pass
+        '''@return: Balance de saldo actual en la cuenta'''
+        if (len(self._registroCreditos) == 0) and (len(self._registroDebitos) == 0):
+            saldo_actual = 0
+            return saldo_actual
+        else:
+            recarga_total = 0
+            consumo_total = 0
+            for i in range(len(self._registroCreditos)):
+                recarga_total = recarga_total + self._registroCreditos[i][0]
+            for i in range(len(self._registroDebitos)):
+                consumo_total = consumo_total + self._registroDebitos[i][0]
+        saldo_actual = recarga_total + consumo_total
+        return saldo_actual
     
     def recargar(self, monto, fecha, idLocal):
-        pass
+        '''Realiza el registro del monto recargado'''
+        recarga = (monto,fecha,idLocal)
+        self._registroCreditos.append(recarga)
     
     def consumir(self, monto, fecha, idLocal, pin):
-        pass
+        ''' Realiza el registro del monto consumido'''
+        if self._pin != pin:
+            return "Error, el pin introducido no corresponde con la billetera del usuario registrado" 
+        elif self.saldo() < monto:
+            return "Error, no se cuenta con balance suficiente para cubrir el coste de la operacion"
+        consumo = (monto,fecha,idLocal,pin)
+        self._registroDebitos.append(consumo)
     
         

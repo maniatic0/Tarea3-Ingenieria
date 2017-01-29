@@ -60,19 +60,19 @@ class Test(unittest.TestCase):
         billetera = BilleteraElectronica(1,"Ricardo","Gomez",26697166,6412)
         billetera.recargar(200,date.today(),666999)
         tamano = len(billetera._registroCreditos)-1
-        self.assertEqual(billetera._registroCreditos[tamano][0],200,"Registro Saldo Distinto")
-        self.assertEqual(billetera._registroCreditos[tamano][1],date.today(),"Registro Fecha Distinto")
-        self.assertEqual(billetera._registroCreditos[tamano][2],666999,"Registro IDlocal Distinto")
+        self.assertEqual(billetera._registroCreditos[tamano][0],200,"Registro Credito Saldo Distinto")
+        self.assertEqual(billetera._registroCreditos[tamano][1],date.today(),"Registro Credito Fecha Distinto")
+        self.assertEqual(billetera._registroCreditos[tamano][2],666999,"Registro Credito idLocal Distinto")
         
     def testRegistroDebito(self):
         '''Caso Interior'''
         billetera = BilleteraElectronica(1,"Oscar","Silva",9039084,10120)
         billetera.consumir(-300,date.today(),131141,10120)
-        tamano = len(billetera._registroCreditos)-1
-        self.assertEqual(billetera._registroCreditos[tamano][0],-300,"Registro Saldo Distinto")
-        self.assertEqual(billetera._registroCreditos[tamano][1],date.today(),"Registro Fecha Distinto")
-        self.assertEqual(billetera._registroCreditos[tamano][2],date.today(),"Registro IDlocal Distinto")
-        
+        tamano = len(billetera._registroDebitos)-1
+        self.assertEqual(billetera._registroDebitos[tamano][0],-300,"Registro Debito Saldo Distinto")
+        self.assertEqual(billetera._registroDebitos[tamano][1],date.today(),"Registro Debito Fecha Distinto")
+        self.assertEqual(billetera._registroDebitos[tamano][2],131141,"Registro Debito idLocal Distinto")
+        self.assertEqual(billetera._registroDebitos[tamano][3],10120,"Registro Debido Pin Distinto")
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
