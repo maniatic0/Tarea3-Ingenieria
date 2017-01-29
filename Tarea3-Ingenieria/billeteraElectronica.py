@@ -6,7 +6,7 @@ Created on Jan 28, 2017
 @author: Daniel Varela
 '''
 from datetime import datetime
-from builtins import str, int
+from builtins import str, int, float
 
 class BilleteraElectronica(object):
     '''
@@ -17,7 +17,7 @@ class BilleteraElectronica(object):
     @ivar _ci: Cedula de la Persona
     @ivar _pin: PIN secreto de la Persona
     @ivar _registroCreditos: Registro de Creditos de la Persona, contiene tripletas (monto, fecha, idLocal)
-    @ivar _registroDebitos: Registro de Debitos de la Persona, contiene tripletas (monto, fecha, idLocal
+    @ivar _registroDebitos: Registro de Debitos de la Persona, contiene tripletas (monto, fecha, idLocal)
     '''
     _identificador = None
     _nombres = ""
@@ -89,17 +89,41 @@ class BilleteraElectronica(object):
         return saldo_actual
     
     def recargar(self, monto, fecha, idLocal):
-        '''Realiza el registro del monto recargado'''
+        '''
+        Realiza el registro del monto recargado
+        @param monto: Monto a recargar, tiene que ser positivo
+        @param fecha: Tiempo en el cual ocurrio la recarga
+        @param idLocal: ID de lugar donde ocurrio la recarga
+        '''
+        if not isinstance(monto, (int, float)) or monto <= 0:
+            raise Exception("Monto tiene que ser un numero positivo")
+        
+        if not isinstance(fecha, datetime):
+            raise Exception("Fecha tiene que ser un datetime ")
+        
         recarga = (monto,fecha,idLocal)
         self._registroCreditos.append(recarga)
     
     def consumir(self, monto, fecha, idLocal, pin):
-        ''' Realiza el registro del monto consumido'''
+        '''
+        Realiza el registro del monto consumido
+        @param monto: Monto a consumir, tiene que ser negativo
+        @param fecha: Tiempo en el cual ocurrio el consumo
+        @param idLocal: ID de lugar donde ocurrio el consumo
+        @param pin: PIN de la persona
+        '''
+        if not isinstance(monto, (int, float)) or monto > 0:
+            raise Exception("Monto tiene que ser un numero negativo")
+        
+        if not isinstance(fecha, datetime):
+            raise Exception("Fecha tiene que ser un datetime ")
+        
         if self._pin != pin:
-            return "Error, el pin introducido no corresponde con la billetera del usuario registrado" 
+            raise Exception("Error, el pin introducido no corresponde con la billetera del usuario registrado") 
         elif self.saldo() < monto:
-            return "Error, no se cuenta con balance suficiente para cubrir el coste de la operacion"
-        consumo = (monto,fecha,idLocal,pin)
+            raise Exception("Error, no se cuenta con balance suficiente para cubrir el coste de la operacion")
+        
+        consumo = (monto,fecha,idLocal)
         self._registroDebitos.append(consumo)
     
         
