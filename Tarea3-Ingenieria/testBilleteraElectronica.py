@@ -74,7 +74,67 @@ class Test(unittest.TestCase):
         self.assertEqual(billetera._registroDebitos[tamano][0],-300,"Registro Debito Saldo Distinto")
         self.assertEqual(billetera._registroDebitos[tamano][1],fecha,"Registro Debito Fecha Distinto")
         self.assertEqual(billetera._registroDebitos[tamano][2],131141,"Registro Debito idLocal Distinto")
-
+        
+    def testExcepcionRecargarSaldoNegativo(self):
+        '''Caso Borde'''
+        with self.assertRaises(Exception) as context:
+            billetera = BilleteraElectronica(1,"Vicente","Neruda",342501,2346)
+            fecha = datetime.today()
+            billetera.recargar(-420,fecha,745)
+            self.assertTrue("Monto tiene que ser un numero positivo" in str(context.exception))
+            
+    def testExceptionRecargarSaldoFechaFormatoIncorrecto(self):
+        '''Caso Borde'''
+        with self.assertRaises(Exception) as context:
+            billetera = BilleteraElectronica(1,"Enrique","Guzman",77562,9000)
+            fecha = '2017/01/25'
+            billetera.recargar(777,fecha,0)
+            self.assertTrue("Fecha tiene que ser un datetime " in str(context.exception)) 
+            
+    def testExceptionConsumirSaldoPositivo(self):
+        '''Caso Borde'''
+        with self.assertRaises(Exception) as context:
+            billetera = BilleteraElectronica(1,"Pedro","Domingo",92031,834)
+            fecha = datetime.today()
+            billetera.consumir(10,fecha,666)
+            self.assertTrue("Monto tiene que ser un numero negativo" in str(context.exception))
+            
+    def testExceptionConsumirSaldoFechaFormatoIncorrecto(self):
+        '''Caso Borde'''
+        with self.assertRaises(Exception) as context:
+            billetera = BilleteraElectronica(1,"Jesus","Salom",145020,69)
+            fecha = (2017,12,24)
+            billetera.recargar(550,fecha,2670,69)
+            billetera.consumir(-500,fecha,2670,69)
+            self.assertTrue("Fecha tiene que ser un datetime " in str(context.exception))
+            
+    def testExceptionConsumirSaldoPinDistinto(self):
+        '''Caso Borde'''
+        with self.assertRaises(Exception) as context:
+            billetera = BilleteraElectronica(1,"Gustavo","Blanco",64212,35967)
+            fecha = datetime.today()
+            billetera.consumir(250,fecha,23012)
+            billetera.consumir(-202,fecha,23012,7)
+            self.assertTrue("Error, el pin introducido no corresponde con la billetera del usuario registrado" in str(context.exception))
+     
+    def testExceptionConsumirSaldoInsuficiente(self):
+        '''Caso Borde'''
+        with self.assertRaises(Exception) as context:
+            billetera = BilleteraElectronica(1,"Juan","Betancourt",293012,394)
+            fecha = datetime.today()
+            billetera.recargar(200,fecha,49292)
+            billetera.consumir(-999,fecha,49202,394)
+            self.assertTrue("Error, no se cuenta con balance suficiente para cubrir el coste de la operacion" in str(context.exception))
+        
+    def testExceptionConsumirSaldoPinNulo(self):
+        '''Caso Borde'''
+        with self.assertRaises(Exception) as context:
+            billetera = BilleteraElectronica(1,"Noel","Rodriguez",56347,12122)
+            fecha = datetime.today()
+            billetera.recargar(20,fecha,15010)
+            billetera.consumir(-19,fecha,20100)
+            self.assertTrue("Debe introducir un pin de usuario" in str(context.exception))
+    
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()
