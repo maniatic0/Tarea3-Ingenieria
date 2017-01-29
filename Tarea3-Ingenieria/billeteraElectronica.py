@@ -43,10 +43,10 @@ class BilleteraElectronica(object):
         if not isinstance(apellidos, str) or apellidos == "":
             raise Exception("Apellidos tiene que ser un String no Vacio")
         
-        if not isinstance(ci, int) or ci <= 0:
+        if not isinstance(ci, int) or ci < 0:
             raise Exception("Cedula tiene que ser un Entero mayor que Cero")
         
-        if not isinstance(pin, int) or pin < 0:
+        if not isinstance(pin, int) or pin <= 0:
             raise Exception("PIN tiene que ser un Entero mayor o igual que Cero")
         
         self._identificador = identificador
