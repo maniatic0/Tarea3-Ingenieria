@@ -144,6 +144,7 @@ class Test(unittest.TestCase):
         '''Caso Borde'''
         billetera = BilleteraElectronica(1,"Asdrubal","Oliveros",9039084,10120)
         fecha = datetime.today()
+        billetera.recargar(sys.float_info.epsilon,fecha,131141)
         billetera.consumir(-sys.float_info.epsilon,fecha,131141,10120)
         tamano = len(billetera._registroDebitos)-1
         self.assertEqual(billetera._registroDebitos[tamano][0],-sys.float_info.epsilon,"Registro Debito Saldo Distinto")
@@ -226,13 +227,22 @@ class Test(unittest.TestCase):
             billetera.consumir(-19,fecha,20100)
             self.assertTrue("Debe introducir un pin de usuario" in str(context.exception))
             
-    def testExceptionRegarcaridLocalNulo(self):
+    def testExceptionRecargaridLocalNulo(self):
         '''Caso Borde'''
         with self.assertRaises(Exception) as context:
             billetera = BilleteraElectronica(1,"Alfonso","Ramon",10293,39491)
             fecha = datetime.today()
             billetera.recargar(10,fecha)
             self.assertTrue("Debe introducir un idLocal" in str(context.exception))
+            
+    def testExceptionConsumiridLocalNulo(self):
+        '''Caso Borde'''
+        with self.assertRaises(Exception) as context:
+            billetera = BilleteraElectronica(1,"Sartenejas","Simon",34,1023)
+            fecha = datetime.today()
+            billetera.recargar(21,fecha,101)
+            billetera.consumir(-17,fecha,None,9002)
+            self.assertTrue("Debe introducir in idLocal" in str(context.exception))
     
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
