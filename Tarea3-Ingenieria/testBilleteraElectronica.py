@@ -105,8 +105,9 @@ class Test(unittest.TestCase):
     def testConsumirSaldo(self):
         '''Caso Interior'''
         billetera = BilleteraElectronica(1,"Cesar","Jose",10231940,5901)
+        billetera.recargar(16,datetime.today(),19203)
         billetera.consumir(-15,datetime.today(),843213,5901)
-        self.assertEqual(billetera.saldo(),-15,"Consumo Saldo Distinto")
+        self.assertEqual(billetera.saldo(),1,"Consumo Saldo Distinto")
         
     def testRegistroCredito(self):
         '''Caso Interior'''
@@ -132,6 +133,7 @@ class Test(unittest.TestCase):
         '''Caso Interior'''
         billetera = BilleteraElectronica(1,"Oscar","Silva",9039084,10120)
         fecha = datetime.today()
+        billetera.recargar(350,fecha,131141)
         billetera.consumir(-300,fecha,131141,10120)
         tamano = len(billetera._registroDebitos)-1
         self.assertEqual(billetera._registroDebitos[tamano][0],-300,"Registro Debito Saldo Distinto")
@@ -142,6 +144,7 @@ class Test(unittest.TestCase):
         '''Caso Borde'''
         billetera = BilleteraElectronica(1,"Asdrubal","Oliveros",9039084,10120)
         fecha = datetime.today()
+        billetera.recargar(sys.float_info.epsilon,fecha,131141)
         billetera.consumir(-sys.float_info.epsilon,fecha,131141,10120)
         tamano = len(billetera._registroDebitos)-1
         self.assertEqual(billetera._registroDebitos[tamano][0],-sys.float_info.epsilon,"Registro Debito Saldo Distinto")
@@ -223,6 +226,23 @@ class Test(unittest.TestCase):
             billetera.recargar(20,fecha,15010)
             billetera.consumir(-19,fecha,20100)
             self.assertTrue("Debe introducir un pin de usuario" in str(context.exception))
+            
+    def testExceptionRecargaridLocalNulo(self):
+        '''Caso Borde'''
+        with self.assertRaises(Exception) as context:
+            billetera = BilleteraElectronica(1,"Alfonso","Ramon",10293,39491)
+            fecha = datetime.today()
+            billetera.recargar(10,fecha)
+            self.assertTrue("Debe introducir un idLocal" in str(context.exception))
+            
+    def testExceptionConsumiridLocalNulo(self):
+        '''Caso Borde'''
+        with self.assertRaises(Exception) as context:
+            billetera = BilleteraElectronica(1,"Sartenejas","Simon",34,1023)
+            fecha = datetime.today()
+            billetera.recargar(21,fecha,101)
+            billetera.consumir(-17,fecha,None,9002)
+            self.assertTrue("Debe introducir in idLocal" in str(context.exception))
     
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

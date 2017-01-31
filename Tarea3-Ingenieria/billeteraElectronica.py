@@ -101,6 +101,9 @@ class BilleteraElectronica(object):
         if not isinstance(fecha, datetime):
             raise Exception("Fecha tiene que ser un datetime ")
         
+        if idLocal == None:
+            raise Exception("Debe introducir in idLocal")
+        
         recarga = (monto,fecha,idLocal)
         self._registroCreditos.append(recarga)
     
@@ -118,11 +121,16 @@ class BilleteraElectronica(object):
         if not isinstance(fecha, datetime):
             raise Exception("Fecha tiene que ser un datetime ")
         
+        if idLocal == None:
+            raise Exception("Debe introducir un idLocal")
+        
         if pin == None:
             raise Exception("Debe introducir un pin de usuario")
-        elif self._pin != pin:
+        
+        if self._pin != pin:
             raise Exception("Error, el pin introducido no corresponde con la billetera del usuario registrado") 
-        elif self.saldo() < monto:
+        
+        if self.saldo() < abs(monto):
             raise Exception("Error, no se cuenta con balance suficiente para cubrir el coste de la operacion")
         
         consumo = (monto,fecha,idLocal)
