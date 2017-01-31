@@ -101,6 +101,9 @@ class BilleteraElectronica(object):
         if not isinstance(fecha, datetime):
             raise Exception("Fecha tiene que ser un datetime ")
         
+        if idLocal == None:
+            raise Exception("Debe introducir in idLocal")
+        
         recarga = (monto,fecha,idLocal)
         self._registroCreditos.append(recarga)
     
