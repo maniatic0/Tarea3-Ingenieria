@@ -62,7 +62,7 @@ class Test(unittest.TestCase):
         
     def testConstruccionNombreApellidoUnicodeEsquina(self):
         '''Caso Esquina'''
-        self.helperConstructorTest(1, "宮本 茂", "Лев Никола́евич Толсто́й", 24609, 0000)
+        self.helperConstructorTest(1, "宮本 茂", "Лев Никола́евич Толсто́й", 24601, 0000)
     
     def testConstruccionTotalEsquina(self):
         '''Caso Esquina'''
